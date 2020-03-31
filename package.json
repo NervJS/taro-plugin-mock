@@ -1,0 +1,40 @@
+{
+  "name": "@tarojs/plugin-mock",
+  "version": "0.0.1",
+  "description": "Taro 数据 Mock 插件",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run clean && npm run prod",
+    "dev": "tsc -w",
+    "prod": "tsc",
+    "clean": "rimraf dist",
+    "test": "jest",
+    "test:dev": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NervJS/taro-plugin-mock.git"
+  },
+  "keywords": [
+    "Taro"
+  ],
+  "author": "luckyadam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NervJS/tarojs-plugin-mock/issues"
+  },
+  "homepage": "https://github.com/NervJS/tarojs-plugin-mock#readme",
+  "devDependencies": {
+    "@types/jest": "^25.1.4",
+    "@types/node": "^13.9.8",
+    "jest": "^25.2.4",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^25.3.0",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.3",
+    "express": "^4.17.1",
+    "http-proxy-middleware": "^1.0.3"
+  }
+}
