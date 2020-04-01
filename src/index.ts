@@ -1,15 +1,20 @@
-import * as path from 'path'
-
-import { getMockConfigs, MOCK_DIR } from './utils'
+import Server from './Server'
+import { getMockConfigs, parseMockApi, createMockMiddleware } from './utils'
 
 export default (ctx, opts) => {
-  const { appPath } = ctx.paths
-  const { fs, createBabelRegister } = ctx.helper
+  ctx.onBuildFinish(() => {
+    const { appPath } = ctx.paths
 
-  getMockConfigs({
-    mockDir: path.join(appPath, MOCK_DIR),
-    pluginOpts: opts,
-    createBabelRegister,
-    fs
+    const mockConfigs = getMockConfigs({
+      appPath,
+      pluginOpts: opts
+    })
+    const mockApis = parseMockApi(mockConfigs)
+    const server = new Server({
+      middlewares: [
+        createMockMiddleware(mockApis)
+      ]
+    })
+    server.start()
   })
 }
