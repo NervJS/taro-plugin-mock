@@ -1,9 +1,15 @@
-import Server from './Server'
+import * as path from 'path'
 
-export {
-  Server
-}
+import { getMockConfigs, MOCK_DIR } from './utils'
 
-export default {
-  Server
+export default (ctx, opts) => {
+  const { appPath } = ctx.paths
+  const { fs, createBabelRegister } = ctx.helper
+
+  getMockConfigs({
+    mockDir: path.join(appPath, MOCK_DIR),
+    pluginOpts: opts,
+    createBabelRegister,
+    fs
+  })
 }

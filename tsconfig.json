@@ -1,4 +1,4 @@
-  
+
 {
   "compilerOptions": {
     "target": "ES2017",
@@ -10,16 +10,16 @@
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
     "outDir": "dist",
+    "rootDir": "./src",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "baseUrl": ".",
-    "rootDir": "."
+    "baseUrl": "."
   },
   "include": [
-    "src"
+    "./src"
   ],
   "exclude": [
     "__tests__",
