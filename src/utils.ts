@@ -10,7 +10,7 @@ export const HTTP_METHODS = ['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'CONNECT', 
 
 export function getMockConfigs ({
   appPath,
-  pluginOpts
+  mocks
 }) {
   const mockDir = path.join(appPath, MOCK_DIR)
   let mockConfigs = {}
@@ -34,8 +34,8 @@ export function getMockConfigs ({
       })
     }
   }
-  if (pluginOpts && !isEmptyObject(pluginOpts)) {
-    mockConfigs = Object.assign({}, mockConfigs, pluginOpts)
+  if (mocks && !isEmptyObject(mocks)) {
+    mockConfigs = Object.assign({}, mockConfigs, mocks)
   }
   return mockConfigs
 }
