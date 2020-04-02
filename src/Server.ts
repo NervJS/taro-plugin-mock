@@ -2,6 +2,8 @@ import * as http from 'http'
 import * as https from 'https'
 
 import * as express from 'express'
+import * as getPort from 'get-port'
+import { chalk } from '@tarojs/helper'
 
 interface IServerOptions {
   https?: boolean
@@ -42,9 +44,11 @@ export default class Server {
     }
   }
 
-  start () {
-    this.listenServer.listen(this.port, this.host, () => {
-      console.log('listening')
+  async start () {
+    const port = await getPort({ port: this.port })
+    const protocol = this.isHttps ? 'https://' : 'http://'
+    this.listenServer.listen(port, this.host, () => {
+      console.log(chalk.green(`数据 mock 服务已启动，Server 地址 ${protocol}${this.host}:${port}`))
     })
   }
 }

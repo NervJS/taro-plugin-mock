@@ -2,7 +2,7 @@ import Server from './Server'
 import { getMockConfigs, parseMockApi, createMockMiddleware } from './utils'
 
 export default (ctx, opts) => {
-  ctx.onBuildFinish(() => {
+  ctx.onBuildFinish(async () => {
     const { appPath } = ctx.paths
 
     const mockConfigs = getMockConfigs({
@@ -15,6 +15,6 @@ export default (ctx, opts) => {
         createMockMiddleware(mockApis)
       ]
     })
-    server.start()
+    await server.start()
   })
 }
