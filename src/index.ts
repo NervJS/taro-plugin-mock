@@ -1,25 +1,24 @@
 import Server from './Server'
-import { getMockConfigs, parseMockApi, createMockMiddleware } from './utils'
+import { createMockMiddleware } from './utils'
 
-export default (ctx, opts) => {
+export default (ctx, pluginOpts) => {
   ctx.onBuildFinish(async () => {
     const { appPath } = ctx.paths
     const {
       mocks,
       port,
       host
-    } = opts
-
-    const mockConfigs = getMockConfigs({
-      appPath,
-      mocks
-    })
-    const mockApis = parseMockApi(mockConfigs)
+    } = pluginOpts
+    const { chokidar } = ctx.helper
     const server = new Server({
       port,
       host,
       middlewares: [
-        createMockMiddleware(mockApis)
+        createMockMiddleware({
+          appPath,
+          mocks,
+          chokidar
+        })
       ]
     })
     await server.start()

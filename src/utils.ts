@@ -11,6 +11,11 @@ export const HTTP_METHODS = ['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'CONNECT', 
 export function getMockConfigs ({
   appPath,
   mocks
+}: {
+  appPath: string,
+  mocks?: {
+    [key: string]: any
+  }
 }) {
   const mockDir = path.join(appPath, MOCK_DIR)
   let mockConfigs = {}
@@ -26,6 +31,7 @@ export function getMockConfigs ({
       absMockFiles.forEach(absFile => {
         let mockConfig = {}
         try {
+          delete require.cache[absFile]
           mockConfig = getModuleDefaultExport(require(absFile))
         } catch (err) {
           throw err
@@ -40,7 +46,7 @@ export function getMockConfigs ({
   return mockConfigs
 }
 
-export function parseMockApi (mockConfigs) {
+export function parseMockApis (mockConfigs) {
   return Object.keys(mockConfigs).map(key => {
     const result = mockConfigs[key]
     let method = 'GET'
@@ -67,10 +73,28 @@ export function parseMockApi (mockConfigs) {
   })
 }
 
-export function createMockMiddleware (mockApis) {
+export function getMockApis ({ appPath, mocks }) {
+  const mockConfigs = getMockConfigs({ appPath, mocks })
+  return parseMockApis(mockConfigs)
+}
+
+export function createMockMiddleware ({
+  appPath,
+  mocks,
+  chokidar
+}) {
+  const mockDir = path.join(appPath, MOCK_DIR)
+  const watcher = chokidar.watch(mockDir, { ignoreInitial: true })
+  let mockApis = getMockApis({ appPath, mocks })
+  watcher.on('all', () => {
+    mockApis = getMockApis({ appPath, mocks })
+  })
+  process.once('SIGINT', async () => {
+    await watcher.close()
+  })
   return (req, res, next) => {
     const { path: reqPath, method: reqMethod } = req
-    let matched = false
+    let matched: any = false
     mockApis.forEach(mock => {
       const { method, reg, keys } = mock
       if (method.toUpperCase() === reqMethod.toUpperCase()) {
