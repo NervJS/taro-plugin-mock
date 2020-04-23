@@ -1,7 +1,9 @@
+import { IPluginContext } from '@tarojs/service'
+
 import Server from './Server'
 import { createMockMiddleware } from './utils'
 
-export default (ctx, pluginOpts) => {
+export default (ctx: IPluginContext, pluginOpts) => {
   ctx.onBuildFinish(async () => {
     const { appPath } = ctx.paths
     const {
