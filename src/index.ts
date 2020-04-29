@@ -4,6 +4,15 @@ import Server from './Server'
 import { createMockMiddleware } from './utils'
 
 export default (ctx: IPluginContext, pluginOpts) => {
+  ctx.addPluginOptsSchema(joi => {
+    return joi.object().keys({
+      mocks: joi.object().pattern(
+        joi.string(), joi.object()
+      ),
+      port: joi.number(),
+      host: joi.string()
+    })
+  })
   ctx.onBuildFinish(async () => {
     const { appPath } = ctx.paths
     const {
