@@ -34,8 +34,8 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@tarojs/helper": "2.2.0",
-    "@tarojs/service": "2.2.0",
+    "@tarojs/helper": "2.2.2",
+    "@tarojs/service": "2.2.2",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "get-port": "^5.1.1",
