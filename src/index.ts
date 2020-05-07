@@ -13,25 +13,30 @@ export default (ctx: IPluginContext, pluginOpts) => {
       host: joi.string()
     })
   })
-  ctx.onBuildFinish(async () => {
-    const { appPath } = ctx.paths
-    const {
-      mocks,
-      port,
-      host
-    } = pluginOpts
-    const { chokidar } = ctx.helper
-    const server = new Server({
-      port,
-      host,
-      middlewares: [
-        createMockMiddleware({
-          appPath,
-          mocks,
-          chokidar
-        })
-      ]
-    })
-    await server.start()
+  let isFirstWatch = true
+  ctx.onBuildFinish(async ({ isWatch }) => {
+    let needStart = !isWatch || isFirstWatch
+    if (needStart) {
+      const { appPath } = ctx.paths
+      const {
+        mocks,
+        port,
+        host
+      } = pluginOpts
+      const { chokidar } = ctx.helper
+      const server = new Server({
+        port,
+        host,
+        middlewares: [
+          createMockMiddleware({
+            appPath,
+            mocks,
+            chokidar
+          })
+        ]
+      })
+      await server.start()
+    }
+    isFirstWatch = false
   })
 }
