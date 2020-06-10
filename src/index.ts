@@ -1,9 +1,7 @@
-import { IPluginContext } from '@tarojs/service'
-
 import Server from './Server'
 import { createMockMiddleware } from './utils'
 
-export default (ctx: IPluginContext, pluginOpts) => {
+export default (ctx, pluginOpts) => {
   ctx.addPluginOptsSchema(joi => {
     return joi.object().keys({
       mocks: joi.object().pattern(
