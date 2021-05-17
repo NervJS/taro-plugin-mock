@@ -34,6 +34,10 @@ export default (ctx, pluginOpts) => {
         ]
       })
       await server.start()
+      process.on('SIGINT', function () {
+        console.log('数据 mock 服务已关闭.');
+        process.exit();
+      });
     }
     isFirstWatch = false
   })
