@@ -21,7 +21,7 @@ export default (ctx, pluginOpts) => {
         port,
         host
       } = pluginOpts
-      const { chokidar } = ctx.helper
+      const helper = ctx.helper
       const server = new Server({
         port,
         host,
@@ -29,15 +29,15 @@ export default (ctx, pluginOpts) => {
           createMockMiddleware({
             appPath,
             mocks,
-            chokidar
+            helper
           })
         ]
       })
-      await server.start()
+      await server.start(helper)
       process.on('SIGINT', function () {
-        console.log('数据 mock 服务已关闭.');
-        process.exit();
-      });
+        console.log('数据 mock 服务已关闭.')
+        process.exit()
+      })
     }
     isFirstWatch = false
   })

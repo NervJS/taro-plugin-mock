@@ -3,36 +3,37 @@ import * as path from 'path'
 import * as glob from 'glob'
 import { pathToRegexp } from 'path-to-regexp'
 import * as bodyParser from 'body-parser'
-import { isEmptyObject, createBabelRegister, fs, getModuleDefaultExport } from '@tarojs/helper'
 
 export const MOCK_DIR = 'mock'
 export const HTTP_METHODS = ['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH']
 
 export function getMockConfigs ({
   appPath,
-  mocks
+  mocks,
+  helper
 }: {
   appPath: string,
   mocks?: {
     [key: string]: any
-  }
+  },
+  helper: any
 }) {
   const mockDir = path.join(appPath, MOCK_DIR)
   let mockConfigs = {}
-  if (fs.existsSync(mockDir)) {
+  if (helper.fs.existsSync(mockDir)) {
     const mockFiles = glob.sync('**/*.[tj]s', {
       cwd: mockDir
     })
     if (mockFiles.length) {
       const absMockFiles = mockFiles.map(file => path.join(mockDir, file))
-      createBabelRegister({
+      helper.createBabelRegister({
         only: absMockFiles
       })
       absMockFiles.forEach(absFile => {
         let mockConfig = {}
         try {
           delete require.cache[absFile]
-          mockConfig = getModuleDefaultExport(require(absFile))
+          mockConfig = helper.getModuleDefaultExport(require(absFile))
         } catch (err) {
           throw err
         }
@@ -40,7 +41,7 @@ export function getMockConfigs ({
       })
     }
   }
-  if (mocks && !isEmptyObject(mocks)) {
+  if (mocks && !helper.isEmptyObject(mocks)) {
     mockConfigs = Object.assign({}, mockConfigs, mocks)
   }
   return mockConfigs
@@ -73,21 +74,21 @@ export function parseMockApis (mockConfigs) {
   })
 }
 
-export function getMockApis ({ appPath, mocks }) {
-  const mockConfigs = getMockConfigs({ appPath, mocks })
+export function getMockApis ({ appPath, mocks, helper }) {
+  const mockConfigs = getMockConfigs({ appPath, mocks, helper })
   return parseMockApis(mockConfigs)
 }
 
 export function createMockMiddleware ({
   appPath,
   mocks,
-  chokidar
+  helper
 }) {
   const mockDir = path.join(appPath, MOCK_DIR)
-  const watcher = chokidar.watch(mockDir, { ignoreInitial: true })
-  let mockApis = getMockApis({ appPath, mocks })
+  const watcher = helper.chokidar.watch(mockDir, { ignoreInitial: true })
+  let mockApis = getMockApis({ appPath, mocks, helper })
   watcher.on('all', () => {
-    mockApis = getMockApis({ appPath, mocks })
+    mockApis = getMockApis({ appPath, mocks, helper })
   })
   process.once('SIGINT', async () => {
     await watcher.close()
