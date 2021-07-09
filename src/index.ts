@@ -1,5 +1,6 @@
 import Server from './Server'
 import { createMockMiddleware } from './utils'
+import * as cors from 'cors'
 
 export default (ctx, pluginOpts) => {
   ctx.addPluginOptsSchema(joi => {
@@ -26,6 +27,7 @@ export default (ctx, pluginOpts) => {
         port,
         host,
         middlewares: [
+          cors(),
           createMockMiddleware({
             appPath,
             mocks,
