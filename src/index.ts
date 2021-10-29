@@ -1,4 +1,5 @@
 import Server from './Server'
+import * as express from 'express'
 import { createMockMiddleware } from './utils'
 
 export default (ctx, pluginOpts) => {
@@ -26,6 +27,7 @@ export default (ctx, pluginOpts) => {
         port,
         host,
         middlewares: [
+          express.json(),
           createMockMiddleware({
             appPath,
             mocks,
