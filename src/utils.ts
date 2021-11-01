@@ -2,7 +2,6 @@ import * as path from 'path'
 
 import * as glob from 'glob'
 import { pathToRegexp } from 'path-to-regexp'
-import * as bodyParser from 'body-parser'
 
 export const MOCK_DIR = 'mock'
 export const HTTP_METHODS = ['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH']
@@ -117,15 +116,10 @@ export function createMockMiddleware ({
     })
     if (matched) {
       const { result } = matched
-      if (typeof result === 'object') {
-        bodyParser.json()(req, res, () => {
-          res.json(result)
-        })
-      } else if (typeof result === 'string') {
-        bodyParser.text()(req, res, () => {
-          res.send(result)
-        })
-      } else if (typeof result === 'function') {
+      if (typeof result === 'string') {
+        res.send(result);
+      }
+      if (typeof result === 'function') {
         (result as Function)(req, res, next)
       } else {
         next()
