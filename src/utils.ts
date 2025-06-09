@@ -25,10 +25,7 @@ export function getMockConfigs ({
     })
     if (mockFiles.length) {
       const absMockFiles = mockFiles.map(file => path.join(mockDir, file))
-      let createRegister;
-      if ('createBabelRegister' in helper) createRegister = helper.createBabelRegister
-      if ('createSwcRegister' in helper) createRegister = helper.createSwcRegister
-      createRegister({
+      helper.createSwcRegister({
         only: absMockFiles
       })
       absMockFiles.forEach(absFile => {
